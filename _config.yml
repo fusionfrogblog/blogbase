@@ -9,7 +9,7 @@ minimal_mistakes_skin    : "contrast" # "air", "aqua", "contrast", "dark", "dirt
 
 # Site Settings
 locale                   : "en"
-title                    : "FusionFrog Blog"
+title                    : "FusionFrog"
 title_separator          : "-"
 name                     : "Fusion Frog"
 description              : "The best day ever"
