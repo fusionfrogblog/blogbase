@@ -1,20 +1,20 @@
-{% if site.footer_scripts %}
-  {% for script in site.footer_scripts %}
-    {% if script contains "://" %}
-      {% capture script_path %}{{ script }}{% endcapture %}
-    {% else %}
-      {% capture script_path %}{{ script | absolute_url }}{% endcapture %}
-    {% endif %}
+{%- if site.footer_scripts -%}
+  {%- for script in site.footer_scripts -%}
+    {%- if script contains "://" -%}
+      {%- capture script_path -%}{{ script }}{%- endcapture -%}
+    {%- else -%}
+      {%- capture script_path -%}{{ script | absolute_url }}{%- endcapture -%}
+    {%- endif -%}
     <script src="{{ script_path }}"></script>
-  {% endfor %}
-{% else %}
+  {%- endfor -%}
+{%- else -%}
   <script src="{{ '/assets/js/main.min.js' | absolute_url }}"></script>
-{% endif %}
+{%- endif -%}
 
-{% if site.search == true or page.layout == 'search' %}
+{%- if site.search == true or page.layout == 'search' -%}
   <script src="{{ '/assets/js/lunr.min.js' | absolute_url }}"></script>
   <script src="{{ '/assets/js/lunr-en.js' | absolute_url }}"></script>
-{% endif %}
+{%- endif -%}
 
-{% include analytics.html %}
-{% include /comments-providers/scripts.html %}
+{%- include analytics.html -%}
+{%- include /comments-providers/scripts.html -%}

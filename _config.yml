@@ -11,7 +11,7 @@ minimal_mistakes_skin    : "tom" # "air", "aqua", "contrast", "dark", "dirt", "n
 locale                   : "en"
 title                    : "FusionFrog"
 title_separator          : "-"
-name                     : "Fusion Frog"
+name                     : "FusionFrog"
 description              : "The best day ever!"
 url                      : # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
