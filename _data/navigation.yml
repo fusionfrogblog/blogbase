@@ -1,6 +1,10 @@
 # main links
 main:
-  - title: "One"
-    url: /docs/quick-start-guide/
+  - title: "Plaza"
+    url: /_pages/plaza/
+  - title: "Plaza2"
+    url: /_pages/plaza/
+  - title: "Plaza3"
+    url: /_pages/plaza/
   - title: "About"
     url: /about/
