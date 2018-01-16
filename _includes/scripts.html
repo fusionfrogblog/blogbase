@@ -8,12 +8,12 @@
     <script src="{{ script_path }}"></script>
   {%- endfor -%}
 {%- else -%}
-  <script src="{{ '/assets/js/main.min.js' | absolute_url }}"></script>
+  <script src="/assets/js/main.min.js"></script>
 {%- endif -%}
 
 {%- if site.search == true or page.layout == 'search' -%}
-  <script src="{{ '/assets/js/lunr.min.js' | absolute_url }}"></script>
-  <script src="{{ '/assets/js/lunr-en.js' | absolute_url }}"></script>
+  <script src="/assets/js/lunr.min.js"></script>
+  <script src="/assets/js/lunr-en.js"></script>
 {%- endif -%}
 
 {%- include analytics.html -%}
