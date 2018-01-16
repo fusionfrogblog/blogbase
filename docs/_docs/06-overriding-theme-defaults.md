@@ -24,4 +24,4 @@ Jekyll will use the files in your project first before falling back to the defau
 Additionally, from `v4.5.0` the theme-gem will also exhibit above behavior for `/_data` via a plugin.
 Consequently, the data files for UI Text and Navigation are also bundled within the theme-gem.
 
-For more information on customizing the theme's [stylesheets]({{ "/docs/stylesheets/" | absolute_url }}) and [JavaScript]({{ "/docs/javascript/" | absolute_url }}), see the appropriate pages.
+For more information on customizing the theme's [stylesheets]({{ "/docs/stylesheets/"  }}) and [JavaScript]({{ "/docs/javascript/"  }}), see the appropriate pages.

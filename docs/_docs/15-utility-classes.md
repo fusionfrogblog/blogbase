@@ -69,7 +69,7 @@ No wrap text.
 
 Position images with the following classes.
 
-![image-center]({{ "/assets/images/image-alignment-580x300.jpg" | absolute_url }}){: .align-center}
+![image-center]({{ "/assets/images/image-alignment-580x300.jpg"  }}){: .align-center}
 
 The image above happens to be **centered**.
 
@@ -79,7 +79,7 @@ The image above happens to be **centered**.
 
 ---
 
-![image-left]({{ "/assets/images/image-alignment-150x150.jpg" | absolute_url }}){: .align-left} The rest of this paragraph is filler for the sake of seeing the text wrap around the 150×150 image, which is **left aligned**. There should be plenty of room above, below, and to the right of the image. Just look at him there --- Hey guy! Way to rock that left side. I don't care what the right aligned image says, you look great. Don't let anyone else tell you differently.
+![image-left]({{ "/assets/images/image-alignment-150x150.jpg"  }}){: .align-left} The rest of this paragraph is filler for the sake of seeing the text wrap around the 150×150 image, which is **left aligned**. There should be plenty of room above, below, and to the right of the image. Just look at him there --- Hey guy! Way to rock that left side. I don't care what the right aligned image says, you look great. Don't let anyone else tell you differently.
 
 ```markdown
 ![image-left](/assets/images/filename.jpg){: .align-left}
@@ -87,7 +87,7 @@ The image above happens to be **centered**.
 
 ---
 
-![image-right]({{ "/assets/images/image-alignment-300x200.jpg" | absolute_url }}){: .align-right}
+![image-right]({{ "/assets/images/image-alignment-300x200.jpg"  }}){: .align-right}
 
 And now we're going to shift things to the **right align**. Again, there should be plenty of room above, below, and to the left of the image. Just look at him there --- Hey guy! Way to rock that right side. I don't care what the left aligned image says, you look great. Don't let anyone else tell you differently.
 
@@ -97,7 +97,7 @@ And now we're going to shift things to the **right align**. Again, there should 
 
 ---
 
-![full]({{ "/assets/images/image-alignment-1200x4002.jpg" | absolute_url }})
+![full]({{ "/assets/images/image-alignment-1200x4002.jpg"  }})
 {: .full}
 
 The image above should extend outside of the parent container on right.

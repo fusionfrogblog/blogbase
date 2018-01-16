@@ -44,7 +44,7 @@ You can think of these Jekyll helpers as little shortcuts. Since GitHub Pages do
 
 Instead of repeating `{% raw %}{{ site.url }}{{ site.baseurl }}{% endraw %}` over and over again to create absolute URLs, you can use `{% raw %}{{ base_path }}{% endraw %}` instead. Simply add `{% raw %}{% include base_path %}{% endraw %}` to layouts, posts, pages, collections, or other includes and you're good to go.
 
-**ProTip:** It's a good practice to use absolute URL paths for assets (especially post images) so they correctly resolve in the site's XML feeds. Example: `{% raw %}{{ "/assets/images/filename.jpg" | absolute_url }}{% endraw %}` ~> `https://yourdoamin.com/assets/images/filename.jpg`
+**ProTip:** It's a good practice to use absolute URL paths for assets (especially post images) so they correctly resolve in the site's XML feeds. Example: `{% raw %}{{ "/assets/images/filename.jpg"  }}{% endraw %}` ~> `https://yourdoamin.com/assets/images/filename.jpg`
 {: .notice--info}
 
 ## Group by Array
@@ -61,9 +61,9 @@ The Liquid based taxonomy archives found amongst the demo pages rely on this hel
 | All posts grouped by tag     | [Source][tag-array]      | [Demo][tag-array-demo]      |
 
 [category-array]: https://github.com/{{ site.repository }}/blob/master/docs/_pages/category-archive.html
-[category-array-demo]: {{ "/categories/" | absolute_url }}
+[category-array-demo]: {{ "/categories/"  }}
 [tag-array]: https://github.com/{{ site.repository }}/blob/master/docs/_pages/tag-archive.html
-[tag-array-demo]: {{ "/tags/" | absolute_url }}
+[tag-array-demo]: {{ "/tags/"  }}
 
 ## Figure
 
@@ -137,12 +137,12 @@ And then drop-in the gallery include in the body where you'd like it to appear.
 
 {% include gallery caption="This is a sample gallery with **Markdown support**." %}
 
-**More Gallery Goodness:** A few more examples and [source code](https://github.com/{{ site.repository }}/blob/master/docs/_posts/2010-09-09-post-gallery.md) can be seen in [this sample gallery post]({{ "" | absolute_url }}{% post_url 2010-09-09-post-gallery %}).
+**More Gallery Goodness:** A few more examples and [source code](https://github.com/{{ site.repository }}/blob/master/docs/_posts/2010-09-09-post-gallery.md) can be seen in [this sample gallery post]({{ ""  }}{% post_url 2010-09-09-post-gallery %}).
 {: .notice--info}
 
 ## Feature Row
 
-Designed to compliment the [`splash`]({{ "/docs/layouts/#splash-page-layout" | absolute_url }}) page layout as a way of arranging and aligning "feature blocks" containing text or image.
+Designed to compliment the [`splash`]({{ "/docs/layouts/#splash-page-layout"  }}) page layout as a way of arranging and aligning "feature blocks" containing text or image.
 
 To add a feature row containing three content blocks with text and image, add the following YAML Front Matter
 
@@ -154,7 +154,7 @@ To add a feature row containing three content blocks with text and image, add th
 | **excerpt**    | Optional     | Content block excerpt text. Markdown is allowed. | |
 | **url**        | Optional     | URL that the button should link to. | |
 | **btn_label**  | Optional     | Button text label. | `more_label` in UI Text data file. |
-| **btn_class**  | Optional     | Button style. See [utility classes]({{ "/docs/utility-classes/#buttons" | absolute_url }}) for options. | `btn` |
+| **btn_class**  | Optional     | Button style. See [utility classes]({{ "/docs/utility-classes/#buttons"  }}) for options. | `btn` |
 
 ```yaml
 feature_row:
@@ -187,7 +187,7 @@ And then drop-in the feature row include in the body where you'd like it to appe
 
 {% include feature_row %}
 
-**More Feature Row Goodness:** A [few more examples]({{ "/splash-page/" | absolute_url }}) and [source code](https://github.com/{{ site.repository }}/blob/master/docs/_pages/splash-page.md) can be seen in the demo site.
+**More Feature Row Goodness:** A [few more examples]({{ "/splash-page/"  }}) and [source code](https://github.com/{{ site.repository }}/blob/master/docs/_pages/splash-page.md) can be seen in the demo site.
 {: .notice--info}
 
 ## Responsive Video Embed
@@ -241,7 +241,7 @@ header:
 
 Auto-generated table of contents list for your posts and pages can be enabled using two methods.
 
-![table of contents example]({{ "/assets/images/mm-toc-helper-example.jpg" | absolute_url }})
+![table of contents example]({{ "/assets/images/mm-toc-helper-example.jpg"  }})
 
 ### Enabled via YAML Front Matter
 
@@ -295,7 +295,7 @@ To include a Kramdown [auto-generated table of contents](https://kramdown.gettal
 
 Include an unordered list of links to be used as sidebar navigation with the `nav_list` helper.
 
-**1.** Start by adding a set of titles and URLs to `_data/navigation.yml` in the same way the [`main` navigation]({{ "/docs/navigation/" | absolute_url }}) is built.
+**1.** Start by adding a set of titles and URLs to `_data/navigation.yml` in the same way the [`main` navigation]({{ "/docs/navigation/"  }}) is built.
 
 `foo` navigation example:
 
