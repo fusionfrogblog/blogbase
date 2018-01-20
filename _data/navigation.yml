@@ -4,7 +4,7 @@ main:
     url: /_pages/plaza/
   - title: "Plaza2"
     url: /_pages/plaza/
-  - title: "Plaza3"
-    url: /_pages/plaza/
+  - title: "A game"
+    url: /agame/
   - title: "About"
     url: /about/

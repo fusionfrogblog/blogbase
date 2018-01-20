@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>A game</title>
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta charset="UTF-8" />
+<link rel="apple-touch-icon" sizes="114x114" href="touch-icon-iphone4.png" />
+<link rel="stylesheet" href="/assets/css/style.css">
+<script>
+document.ontouchmove = function(e) {
+e.preventDefault();};
+</script>
+
+<body>
+<p style="color:#7A9E9F" id="i"></p>
+<div id="game">
+  <audio id="jump" src="/assets/audio/jump.mp3" type="audio/mp3" preload="auto"></audio>
+  <audio id="land" src="/assets/audio/land.mp3" type="audio/mp3" preload="auto"></audio>
+  <audio id="die" src="/assets/audio/die.mp3" type="audio/mp3" preload="auto"></audio>
+  <audio id="win" src="/assets/audio/win.mp3" type="audio/mp3" preload="auto"></audio>
+  <audio id="bigwin" src="/assets/audio/bigwin.mp3" type="audio/mp3" preload="auto"></audio>
+  <div class="grave" style="top:6pc;left:1.5pc;">>>></div>
+</div>
+<script src='/assets/js/vendor/polyfill.min.js'></script>
+<script src='/assets/js/vendor/jquery/jquery-3.2.1.min.js'></script>
+<script src='/assets/js/vendor/sprintf.min.js'></script>
+<script  src="/assets/js/index.js"></script>
+</body>
+
+</html>

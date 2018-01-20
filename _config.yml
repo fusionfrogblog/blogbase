@@ -12,7 +12,7 @@ locale                   : "en"
 title                    : "FusionFrog"
 title_separator          : "-"
 name                     : "FusionFrog"
-description              : "The best day ever!!"
+description              : "The best day ever!"
 url                      : # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
@@ -129,7 +129,6 @@ exclude:
   - .sass-cache
   - assets/js/plugins
   - assets/js/_main.js
-  - assets/js/vendor
   - Capfile
   - CHANGELOG
   - config
@@ -177,6 +176,11 @@ sass:
   sass_dir: _sass
   style: compressed # http://sass-lang.com/documentation/file.SASS_REFERENCE.html#output_style
 
+assets:
+  sources:
+    - assets/
+  compress:
+    css: false
 
 # Outputting
 permalink: /:categories/:title/
