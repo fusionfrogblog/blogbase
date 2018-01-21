@@ -1,7 +1,7 @@
 ---
 title: "A Game"
-layout: agame
-permalink: /agame/
+layout: uvp
+permalink: /uvp/
 categories:
 
 tags:

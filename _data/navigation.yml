@@ -1,10 +1,5 @@
 # main links
 main:
-  - title: "Plaza"
-    url: /_pages/plaza/
-  - title: "Plaza2"
-    url: /_pages/plaza/
-  - title: "A game"
-    url: /agame/
-  - title: "About"
-    url: /about/
+  - title: "Quick Game"
+    url: /uvp/
+  
