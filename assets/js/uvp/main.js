@@ -132,7 +132,8 @@ const touch = {
 	lefthold: false,
 	last: -1,
 	time: 0,
-	timer: null
+	timer: null,
+	active: true
 };
 const input = {
 	jump: function () {
@@ -269,7 +270,7 @@ function actor(type, x, y, w, h, face) {
 		},
 		update: function () {
 			if (this.y > 256) this.die();
-			if (this.type == "player" && this.canjump && input.jump()) {
+			if (this.type == "player" && touch.active && this.canjump && input.jump()) {
 				player.vy = -0.72;
 				audio.jump.play();
 				this.canjump = false;
@@ -287,14 +288,50 @@ function actor(type, x, y, w, h, face) {
 			}
 		},
 		die: function () {
-			prop("grave", this.x - this.vx, this.y - this.vy, 4, 3, ":(");
-			this.vx = this.vy = 0;
-			this.x = 2;
-			this.y = 6;
+			//prop("grave", this.x - this.vx, this.y - this.vy, 4, 3, ":(");
+			touch.active = false;
+			//this.vx = this.vy = 0;
+			this.vx = 1;
+			//this.x = 2;
+			//this.y = 6;
 			this.move(0, 0);
 			stage.timer = 0;
 			audio.die.play();
+			stage.animDie = 1;
+			this.animDieLoop(this);
 		},
+		animDieLoop: function(self) {
+			stage.animDie++;
+			dom.css(
+				"transform",
+				sp(
+					"scale(%f, %f) rotate(%fdeg)",
+					1 + Math.abs(stage.animDie / 3),
+					1 + Math.abs(stage.animDie/ 3),
+					stage.animDie * 5
+				)
+			);
+			 if (stage.animDie > 8) {
+				 dom.css(
+					 "transform",
+					 sp(
+						 "scale(%f, %f) rotate(%fdeg) ",
+						 1,
+						 1,
+						 0
+					 )
+				 );
+				 self.vx = this.vy = 0;
+				 self.vx = 1;
+				 self.x = 2;
+				 self.y = 6;
+				 self.move(0, 0);
+				 touch.active = true;
+			 } else {
+				 window.setTimeout(self.animDieLoop, 40, self);
+			 }
+		},
+
 		win: function () {
 			this.vx = this.vy = 0;
 			this.x = 2;
@@ -319,7 +356,7 @@ function collision(actor) {
 			actor.x <= prop.x + prop.w
 		) {
 			if (prop.type == "spike") {
-				actor.die();
+				if (touch.active) actor.die();
 				return;
 			}
 			if (prop.type == "platform goal") {
@@ -419,8 +456,8 @@ cam.reset();
 
 function gameloop(time) {
 	window.requestAnimationFrame(gameloop);
-	if (input.right()) player.vx += 0.25;
-	if (input.left()) player.vx -= 0.25;
+	if (touch.active && input.right()) player.vx += 0.25;
+	if (touch.active && input.left()) player.vx -= 0.25;
 	if (stage) stage.update();
 	cam.update();
 	keyboard.keyspressed.forEach(function (v, i, a) {
