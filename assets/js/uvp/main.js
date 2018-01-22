@@ -18,59 +18,6 @@ const keyboard = {
 		up: 42,
 		arrowdown: 43,
 		down: 43,
-		",": 44,
-		"-": 45,
-		".": 46,
-		"/": 47,
-		"0": 48,
-		"1": 49,
-		"2": 50,
-		"3": 51,
-		"4": 52,
-		"5": 53,
-		"6": 54,
-		"7": 55,
-		"8": 56,
-		"9": 57,
-		":": 58,
-		";": 59,
-		"<": 60,
-		"=": 61,
-		">": 62,
-		"?": 63,
-		"@": 64,
-		A: 65,
-		B: 66,
-		C: 67,
-		D: 68,
-		E: 69,
-		F: 70,
-		G: 71,
-		H: 72,
-		I: 73,
-		J: 74,
-		K: 75,
-		L: 76,
-		M: 77,
-		N: 78,
-		O: 79,
-		P: 80,
-		Q: 81,
-		R: 82,
-		S: 83,
-		T: 84,
-		U: 85,
-		V: 86,
-		W: 87,
-		X: 88,
-		Y: 89,
-		Z: 90,
-		"[": 91,
-		"": 92,
-		"]": 93,
-		"^": 94,
-		F1: 95,
-		"`": 96,
 		a: 97,
 		b: 98,
 		c: 99,
@@ -96,11 +43,7 @@ const keyboard = {
 		w: 119,
 		x: 120,
 		y: 121,
-		z: 122,
-		"{": 123,
-		"|": 124,
-		"}": 125,
-		"~": 126
+		z: 122
 	},
 	keys: new Uint8Array(128),
 	keyspressed: new Uint8Array(128),
@@ -140,10 +83,12 @@ const input = {
 		return keyboard.pressed("space", "w", "up") || touch.right || touch.left;
 	},
 	right: function () {
-		return keyboard.down("right", "d") || touch.righthold;
+		return true;
+		//return keyboard.down("right", "d") || touch.righthold;
 	},
 	left: function () {
-		return keyboard.down("left", "a") || touch.lefthold;
+		return false;
+		//return keyboard.down("left", "a") || touch.lefthold;
 	}
 };
 $(document).on("touchstart", function (event) {
@@ -292,6 +237,7 @@ function actor(type, x, y, w, h, face) {
 			touch.active = false;
 			//this.vx = this.vy = 0;
 			this.vx = 1;
+			this.vy = 0;
 			//this.x = 2;
 			//this.y = 6;
 			this.move(0, 0);
@@ -327,6 +273,7 @@ function actor(type, x, y, w, h, face) {
 				 self.y = 6;
 				 self.move(0, 0);
 				 touch.active = true;
+				 game.try++;
 			 } else {
 				 window.setTimeout(self.animDieLoop, 40, self);
 			 }
@@ -338,6 +285,8 @@ function actor(type, x, y, w, h, face) {
 			this.y = 6;
 			this.move(0, 0);
 			stage.timer = 0;
+			game.goal++;
+			game.score += game.goal * game.score;
 			audio.win.play();
 		}
 	};
@@ -355,7 +304,7 @@ function collision(actor) {
 			actor.x + actor.w >= prop.x &&
 			actor.x <= prop.x + prop.w
 		) {
-			if (prop.type == "spike") {
+			if (prop.type == "spike" || prop.type == "lava") {
 				if (touch.active) actor.die();
 				return;
 			}
@@ -439,20 +388,69 @@ const cam = {
 };
 // setup level
 
-var y = 16;
-for (var i = 0; i < 16; i++) {
-	y = Math.round(y + (Math.random() - 0.5) * 3);
-	var w = Math.round(8 + Math.random() * 2) * 2;
-	prop("platform", i * 16, y, w, 2);
-	if (i == 15) prop("platform goal", i * 16 + w + 2, y - 8, 2, 8);
-	if (Math.random() < 0.5 && i > 1) prop("spike", i * 16 + 4, y - 2, Math.round(w / 6) * 2);
-}
+// var y = 16;
+// for (var i = 0; i < 16; i++) {
+// 	y = Math.round(y + (Math.random() - 0.5) * 3);
+// 	var w = Math.round(8 + Math.random() * 2) * 2;
+// 	prop("platform", i * 16, y, w, 2);
+// 	if (i == 15) prop("platform goal", i * 16 + w + 2, y - 8, 2, 8);
+// 	if (Math.random() < 0.5 && i > 1) prop("spike", i * 16 + 4, y - 2, Math.round(w / 6) * 2);
+// }
 //prop("spike", 2, 44, 302, 3);
-prop("platform", 0, 0, 2, 48);
-prop("platform", -2, 46, 302, 2);
-var player = actor("player", 2, 8, 3, 3);
-cam.target = player;
-cam.reset();
+// prop("platform", 0, 0, 2, 48);
+// prop("platform", -2, 46, 302, 2);
+// var player = actor("player", 2, 8, 3, 3);
+// cam.target = player;
+// cam.reset();
+
+function setLevel(level) {
+	// block multiplier
+	var ym = 2;
+	var xm = 2;
+	// start position
+	var sx = 0;
+	var sy = 12;
+	console.log('setLevel',level);
+	for (var pLine in level.map) {
+		console.log(level.map[pLine]);
+		var y = pLine * ym + sy;
+		var mapLine = level.map[pLine];
+		var platStart = -1;
+		for (i=0;i<=mapLine.length;i++) {
+			//console.log(mapLine.substring(i,i+1));
+			var char = mapLine.substring(i,i+1);
+			if (char == '*' && platStart == -1) {
+				platStart = i;
+			}
+			if (platStart > -1 && (char != '*' || i == mapLine.length)) {
+				platEnd = i;
+				//console.log('Platform ',platStart,platEnd,sx+xm*platStart,y, (platEnd-platStart)*xm,ym);
+				prop("platform", sx+xm*platStart,y, (platEnd-platStart)*xm,ym);
+				platStart = -1;
+			}
+			if (char == 'p') {
+				prop("spike", sx+xm*i,y-1, 3,3);
+			}
+			if (char == 'l') {
+				prop("lava", sx+xm*i,y-1, 3,3);
+			}
+			if (char == 'g') {
+				//prop("platform goal", i * 16 + w + 2, y - 8, 2, 8);
+				prop("platform goal", sx+xm*i,y-1, 3,8);
+			}
+		}
+
+
+	}
+	//prop("platform", sx+4,sy+4, ym+2,xm);
+
+	// game frame and player init
+	prop("platform", 0, 0, 2, 48);
+	prop("platform", -2, 46, 302, 2);
+	player = actor("player", 2, 8, 3, 3);
+	cam.target = player;
+	cam.reset();
+}
 
 function gameloop(time) {
 	window.requestAnimationFrame(gameloop);
@@ -464,9 +462,31 @@ function gameloop(time) {
 		a[i] = 0;
 	});
 	stage.timer++;
-	$("#i").text(sp("Time (v0.1): %.1f", stage.timer / 60));
+	// stage.timer /60
+	$("#i").text(sp("Try: %f | Score: %f", game.try, game.goal));
 	touch.right = false;
 	touch.left = false;
 }
 cam.zoom();
-window.requestAnimationFrame(gameloop);
+
+function startGame(levels) {
+	game = {};
+	game.score = 0;
+	game.try = 1;
+	game.goal = 0;
+	console.log('startGame - got levels',levels);
+	const firstLevel = levels.level[0];
+	setLevel(firstLevel);
+	window.requestAnimationFrame(gameloop);
+}
+
+// Load levels
+$.getJSON("/assets/js/uvp/levels/levels.json")
+	.done(function (allLevels ) {
+		startGame(allLevels);
+	})
+	.fail(function( jqxhr, textStatus, error ) {
+    var err = textStatus + ", " + error;
+    console.log( "Request Failed: " + err );
+});
+//window.requestAnimationFrame(gameloop);
