@@ -269,8 +269,8 @@ function actor(type, x, y, w, h, face) {
 				 );
 				 self.vx = this.vy = 0;
 				 self.vx = 1;
-				 self.x = 2;
-				 self.y = 6;
+				 self.x = game.map.player.x;
+				 self.y = game.map.player.y;
 				 self.move(0, 0);
 				 touch.active = true;
 				 game.try++;
@@ -304,11 +304,11 @@ function collision(actor) {
 			actor.x + actor.w >= prop.x &&
 			actor.x <= prop.x + prop.w
 		) {
-			if (prop.type == "spike" || prop.type == "lava") {
+			if (prop.type == "poop" || prop.type == "lava") {
 				if (touch.active) actor.die();
 				return;
 			}
-			if (prop.type == "platform goal") {
+			if (prop.type == "goal") {
 				actor.win();
 				return;
 			}
@@ -392,12 +392,12 @@ const cam = {
 // for (var i = 0; i < 16; i++) {
 // 	y = Math.round(y + (Math.random() - 0.5) * 3);
 // 	var w = Math.round(8 + Math.random() * 2) * 2;
-// 	prop("platform", i * 16, y, w, 2);
-// 	if (i == 15) prop("platform goal", i * 16 + w + 2, y - 8, 2, 8);
-// 	if (Math.random() < 0.5 && i > 1) prop("spike", i * 16 + 4, y - 2, Math.round(w / 6) * 2);
+// 	prop("grassBlock", i * 16, y, w, 2);
+// 	if (i == 15) prop("grassBlock goal", i * 16 + w + 2, y - 8, 2, 8);
+// 	if (Math.random() < 0.5 && i > 1) prop("poop", i * 16 + 4, y - 2, Math.round(w / 6) * 2);
 // }
-//prop("spike", 2, 44, 302, 3);
-// prop("platform", 0, 0, 2, 48);
+//prop("poop", 2, 44, 302, 3);
+// prop("grassBlock", 0, 0, 2, 48);
 // prop("platform", -2, 46, 302, 2);
 // var player = actor("player", 2, 8, 3, 3);
 // cam.target = player;
@@ -410,33 +410,54 @@ function setLevel(level) {
 	// start position
 	var sx = 0;
 	var sy = 12;
-	console.log('setLevel',level);
+	game.map.largestLine = 0;
+	//console.log('setLevel',level);
 	for (var pLine in level.map) {
-		console.log(level.map[pLine]);
+		//console.log(level.map[pLine]);
 		var y = pLine * ym + sy;
 		var mapLine = level.map[pLine];
-		var platStart = -1;
+		if (mapLine.length > game.map.largestLine) {
+			game.map.largestLine = mapLine.length;
+		}
+		var platStart1 = -1;
+		var platStart2 = -1;
 		for (i=0;i<=mapLine.length;i++) {
 			//console.log(mapLine.substring(i,i+1));
 			var char = mapLine.substring(i,i+1);
-			if (char == '*' && platStart == -1) {
-				platStart = i;
+			if (char == '*' && platStart1 == -1) {
+				platStart1 = i;
 			}
-			if (platStart > -1 && (char != '*' || i == mapLine.length)) {
-				platEnd = i;
-				//console.log('Platform ',platStart,platEnd,sx+xm*platStart,y, (platEnd-platStart)*xm,ym);
-				prop("platform", sx+xm*platStart,y, (platEnd-platStart)*xm,ym);
-				platStart = -1;
+			if (platStart1 > -1 && (char != '*' || i == mapLine.length)) {
+				platEnd1 = i;
+				if (char == 'R') {
+					platEnd1 = game.map.largestLine;
+				}
+				prop("grass", sx+xm*platStart1,y, (platEnd1-platStart1)*xm,ym);
+				platStart1 = -1;
 			}
+			if (char == '_' && platStart2 == -1) {
+				platStart2 = i;
+			}
+			if (platStart2 > -1 && (char != '_' || i == mapLine.length)) {
+				platEnd2 = i;
+				prop("grassTop", sx+xm*platStart2,y, (platEnd2-platStart2)*xm,ym);
+				platStart2 = -1;
+			}
+
 			if (char == 'p') {
-				prop("spike", sx+xm*i,y-1, 3,3);
+				prop("poop", sx+xm*i,y-1, 3,3);
 			}
 			if (char == 'l') {
 				prop("lava", sx+xm*i,y-1, 3,3);
 			}
 			if (char == 'g') {
 				//prop("platform goal", i * 16 + w + 2, y - 8, 2, 8);
-				prop("platform goal", sx+xm*i,y-1, 3,8);
+				prop("goal", sx+xm*i,y, 5,6.65);
+			}
+			if (char == 'u') {
+				game.map.player.x = sx+xm*i;
+				game.map.player.y = y;
+				console.log(game.map.player.x,game.map.player.y);
 			}
 		}
 
@@ -445,9 +466,9 @@ function setLevel(level) {
 	//prop("platform", sx+4,sy+4, ym+2,xm);
 
 	// game frame and player init
-	prop("platform", 0, 0, 2, 48);
-	prop("platform", -2, 46, 302, 2);
-	player = actor("player", 2, 8, 3, 3);
+	//prop("platform", 0, 0, 2, 48);
+	prop("grass", -2, 46, 302, 2);
+	player = actor("player", game.map.player.x, game.map.player.y, 3, 3);
 	cam.target = player;
 	cam.reset();
 }
@@ -471,10 +492,12 @@ cam.zoom();
 
 function startGame(levels) {
 	game = {};
+	game.map = {};
+	game.map.player = {};
 	game.score = 0;
 	game.try = 1;
 	game.goal = 0;
-	console.log('startGame - got levels',levels);
+	//console.log('startGame - got levels',levels);
 	const firstLevel = levels.level[0];
 	setLevel(firstLevel);
 	window.requestAnimationFrame(gameloop);
@@ -484,9 +507,4 @@ function startGame(levels) {
 $.getJSON("/assets/js/uvp/levels/levels.json")
 	.done(function (allLevels ) {
 		startGame(allLevels);
-	})
-	.fail(function( jqxhr, textStatus, error ) {
-    var err = textStatus + ", " + error;
-    console.log( "Request Failed: " + err );
-});
-//window.requestAnimationFrame(gameloop);
+	});

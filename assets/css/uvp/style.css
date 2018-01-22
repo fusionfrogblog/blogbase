@@ -5,7 +5,7 @@
 }
 
 body {
-	background: rgb(30, 20, 57);
+	background: rgb(57, 118, 156);
 	font-family: Quicksand;
 	color: #3C4C4F;
 	margin: 0;
@@ -22,14 +22,29 @@ body {
 	margin: 0;
 }
 
-.platform {
+.scoreBoard {
+	color: #FEFEFE;
+}
+.grassTop {
+	position: absolute;
+	background: url("/assets/images/uvp/grassTop.png");
+}
+
+.goal {
+	position: absolute;
+	background: url("/assets/images/uvp/goal.png");
+}
+
+
+.grass {
 	position: absolute;
 	background: url("/assets/images/uvp/grassBottom.png");
 }
 
-.spike {
+.poop {
 	position: absolute;
 	background: url("/assets/images/uvp/galaxypoop.png");
+	background-position: 2px 6px;
 }
 
 .lava {
@@ -53,6 +68,7 @@ body {
 
 .player {
 	background: url("/assets/images/uvp/unihero.png") no-repeat;
+	background-position: 7px 9px;
 }
 
 .grave {
@@ -70,14 +86,4 @@ body {
 	font-size: 2em;
 	transform: rotate(90deg);
 	z-index: -1;
-}
-
-.goal {
-	background: repeating-linear-gradient(
-		45deg,
-		#EEF5DB,
-		#EEF5DB 1pc,
-		#D2D8C0 1pc,
-		#D2D8C0 2pc
-	);
 }
