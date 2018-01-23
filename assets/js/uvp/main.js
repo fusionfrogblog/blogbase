@@ -160,6 +160,48 @@ function prop(type, x, y, w, h, text) {
 		solid: type == "grave" ? false : true,
 		delete: function () {
 			dom.remove();
+		},
+		fadeIn: function(pl,cd,score) {
+			audio.win.play();
+			dom.hide();
+			dom.fadeIn( 2000, function() {
+  		});
+			this.upScore = function(pl,cd,score) {
+				game.score += score;
+				console.log('scoring.');
+				cd--;
+				if (cd > 0) {
+				self= this;
+				window.setTimeout(function() { self.upScore(pl,cd,score); }, 100);
+			} else {
+				pl.vx = pl.vy = 0;
+				pl.x = 0;
+				pl.y = 6;
+				pl.move(0, 0);
+				stage.timer = 0;
+				game.goal++;
+				game.score += game.goal * game.score;
+				game.try = 1;
+				// to do: completely rewrite and reset level
+				//touch.active = true;
+			}
+			}
+			this.upScore(pl,cd,score);
+		},
+
+		fadeOut: function(index,cd,score) {
+			cd--;
+			game.score += score;
+			dom.css(
+				"transform",
+				sp(
+					"scale(%f, %f)",
+					cd/10,
+					cd/10
+				)
+			);
+			self = this;
+			if (cd > 0) window.setTimeout(function() {self.fadeOut(index,cd,score); },30);
 		}
 	};
 	stage.props.push(self);
@@ -248,16 +290,19 @@ function actor(type, x, y, w, h, face) {
 		},
 		animDieLoop: function(self) {
 			stage.animDie++;
+			if (stage.animDie < 8) {
+				self.x += .5;
 			dom.css(
 				"transform",
 				sp(
 					"scale(%f, %f) rotate(%fdeg)",
-					1 + Math.abs(stage.animDie / 3),
-					1 + Math.abs(stage.animDie/ 3),
-					stage.animDie * 5
+					1 + Math.abs(stage.animDie / 9),
+					1 + Math.abs(stage.animDie/ 9),
+					stage.animDie * 4
 				)
 			);
-			 if (stage.animDie > 8) {
+		}
+			 if (stage.animDie > 18) {
 				 dom.css(
 					 "transform",
 					 sp(
@@ -280,14 +325,17 @@ function actor(type, x, y, w, h, face) {
 		},
 
 		win: function () {
-			this.vx = this.vy = 0;
-			this.x = 2;
-			this.y = 6;
-			this.move(0, 0);
-			stage.timer = 0;
-			game.goal++;
-			game.score += game.goal * game.score;
-			audio.win.play();
+			touch.active = false;
+			var iceWin = prop("iceCream", this.x-1,this.y-10, 4.5,9.5);
+			iceWin.fadeIn(this,20,25);
+			// this.vx = this.vy = 0;
+			this.x -= 1;
+			// this.y = 6;
+			// this.move(0, 0);
+			// stage.timer = 0;
+			// game.goal++;
+			// game.score += game.goal * game.score;
+			// audio.win.play();
 		}
 	};
 	stage.actors.push(self);
@@ -296,7 +344,7 @@ function actor(type, x, y, w, h, face) {
 
 function collision(actor) {
 	var collide = 0;
-	stage.props.forEach(function (prop) {
+	stage.props.forEach(function (prop,index) {
 		if (
 			prop.solid &&
 			actor.y + actor.h >= prop.y &&
@@ -305,9 +353,20 @@ function collision(actor) {
 			actor.x <= prop.x + prop.w
 		) {
 			if (prop.type == "poop" || prop.type == "lava") {
+				if (game.score > 0) game.score --;
 				if (touch.active) actor.die();
 				return;
 			}
+			if (prop.type == "diamond") {
+				//prop.delete();
+				//stage.props.splice(index, 1);
+				stage.props[index].y = -1;
+				stage.props[index].x = -1;
+				prop.fadeOut(index,10,5);
+				//prop.y = 0;
+				return;
+			}
+
 			if (prop.type == "goal") {
 				actor.win();
 				return;
@@ -450,6 +509,9 @@ function setLevel(level) {
 			if (char == 'l') {
 				prop("lava", sx+xm*i,y-1, 3,3);
 			}
+			if (char == 'd') {
+				prop("diamond", sx+xm*i,y-1, 3,3.2);
+			}
 			if (char == 'g') {
 				//prop("platform goal", i * 16 + w + 2, y - 8, 2, 8);
 				prop("goal", sx+xm*i,y, 5,6.65);
@@ -471,6 +533,7 @@ function setLevel(level) {
 	player = actor("player", game.map.player.x, game.map.player.y, 3, 3);
 	cam.target = player;
 	cam.reset();
+	touch.active = true;
 }
 
 function gameloop(time) {
@@ -484,7 +547,7 @@ function gameloop(time) {
 	});
 	stage.timer++;
 	// stage.timer /60
-	$("#i").text(sp("Try: %f | Score: %f", game.try, game.goal));
+	$("#i").text(sp("Level: %f Try: %f  Score: %f", game.level, game.try, game.score));
 	touch.right = false;
 	touch.left = false;
 }
@@ -497,6 +560,8 @@ function startGame(levels) {
 	game.score = 0;
 	game.try = 1;
 	game.goal = 0;
+	game.level = 1;
+	game.levels = levels;
 	//console.log('startGame - got levels',levels);
 	const firstLevel = levels.level[0];
 	setLevel(firstLevel);
