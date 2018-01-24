@@ -357,7 +357,7 @@ function collision(actor) {
 				if (touch.active) actor.die();
 				return;
 			}
-			if (prop.type == "diamond") {
+			if (prop.type == "diamond" || prop.type == "cupcake1") {
 				//prop.delete();
 				//stage.props.splice(index, 1);
 				stage.props[index].y = -1;
@@ -431,7 +431,7 @@ const cam = {
 		this.zoomlvl = ((window.innerWidth + window.innerHeight) / (1280 + 720)) + (this.rot ? 0.3 : 0);
 	},
 	follow: function () {
-		this.x = lerp(this.x, this.fx(), this.speed);
+		this.x = lerp(this.x+3, this.fx(), this.speed);
 		this.y = lerp(this.y, this.fy(), this.speed);
 	},
 	reset: function () {
@@ -511,6 +511,9 @@ function setLevel(level) {
 			}
 			if (char == 'd') {
 				prop("diamond", sx+xm*i,y-1, 3,3.2);
+			}
+			if (char == 'c') {
+				prop("cupcake1", sx+xm*i,y-1, 3,4);
 			}
 			if (char == 'g') {
 				//prop("platform goal", i * 16 + w + 2, y - 8, 2, 8);
