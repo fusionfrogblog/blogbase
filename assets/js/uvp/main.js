@@ -120,17 +120,20 @@ function lerp(v0, v1, t) {
 	return (1 - t) * v0 + t * v1;
 }
 
-var stage = {
-	maxprops: 180,
-	props: [],
-	actors: [],
-	update: function () {
-		for (var i = 0; i < this.actors.length; i++) {
-			this.actors[i].update();
-		}
-	},
-	timer: 0
-};
+function initStage() {
+	stage = {
+		maxprops: 180,
+		props: [],
+		actors: [],
+		update: function () {
+			for (var i = 0; i < this.actors.length; i++) {
+				this.actors[i].update();
+			}
+		},
+		timer: 0
+	};
+}
+
 
 const audio = (function () {
 	var self = {};
@@ -184,6 +187,11 @@ function prop(type, x, y, w, h, text) {
 				game.try = 1;
 				// to do: completely rewrite and reset level
 				//touch.active = true;
+				cd = 1;
+				this.waitForMessage = function() {
+					console.log('wait...',cd);
+					window.setTimeout(function() { self.waitForMessage(cd)},1000);
+				}
 			}
 			}
 			this.upScore(pl,cd,score);
@@ -239,6 +247,9 @@ function actor(type, x, y, w, h, face) {
 		h: h,
 		vx: 0,
 		vy: 0,
+		delete: function () {
+			dom.remove();
+		},
 		move: function (dx, dy) {
 			this.x += dx;
 			this.y += dy;
@@ -257,10 +268,13 @@ function actor(type, x, y, w, h, face) {
 		},
 		update: function () {
 			if (this.y > 256) this.die();
-			if (this.type == "player" && touch.active && this.canjump && input.jump()) {
-				player.vy = -0.72;
-				audio.jump.play();
-				this.canjump = false;
+			if (input.jump()) {
+				game.jumpPressed = true;
+				if (this.type == "player" && touch.active && this.canjump ) {
+					player.vy = -0.72;
+					audio.jump.play();
+					this.canjump = false;
+				}
 			}
 			this.move(this.vx, this.vy);
 			this.vy += 0.04;
@@ -326,10 +340,43 @@ function actor(type, x, y, w, h, face) {
 
 		win: function () {
 			touch.active = false;
-			var iceWin = prop("iceCream", this.x-1,this.y-10, 4.5,9.5);
-			iceWin.fadeIn(this,20,25);
+			if (!game.atGoal) {
+				prop("iceCream", this.x-1,this.y-10, 4.5,9.5);
+				$('.iceCream').hide();
+				this.x -= 1;
+				self = this;
+				$('.iceCream').fadeIn( 2000, function() {
+					game.score += 1200;
+					prop("speech-bubble", self.x+9,self.y-5, 10,4);
+					$('.speech-bubble').html("Congratulations!<br/>Here is your Ice cream.<br/>Click to continue.");
+					self = this;
+					game.jumpPressed = false;
+					clickId = setInterval(function() {
+						if (game.jumpPressed) {
+							game.jumpPressed = false;
+							clearInterval(clickId);
+							loadNextLevel();
+						}
+					}, 100);
+				});
+				audio.win.play();
+			}
+			game.atGoal = true;
+
+			//iceWin.fadeIn(this,20,25);
+
+			//console.log('scoring.');
+				// pl.vx = pl.vy = 0;
+				// pl.x = 0;
+				// pl.y = 6;
+				// pl.move(0, 0);
+				// stage.timer = 0;
+				// game.goal++;
+				// game.score += game.goal * game.score;
+				// game.try = 1;
+
 			// this.vx = this.vy = 0;
-			this.x -= 1;
+			//this.x -= 1;
 			// this.y = 6;
 			// this.move(0, 0);
 			// stage.timer = 0;
@@ -461,8 +508,21 @@ const cam = {
 // var player = actor("player", 2, 8, 3, 3);
 // cam.target = player;
 // cam.reset();
+function loadNextLevel() {
+	// unload previous level
+	stage.props.find(function (prop, i) {
+			prop.delete();
+	});
+	stage.actors.find(function (actor, i) {
+			actor.delete();
+	});
+	stage.props = {};
+	initStage();
+	game.level++;
+	loadLevel(game.levels.level[game.level-1]);
+}
 
-function setLevel(level) {
+function loadLevel(level) {
 	// block multiplier
 	var ym = 2;
 	var xm = 2;
@@ -470,7 +530,7 @@ function setLevel(level) {
 	var sx = 0;
 	var sy = 12;
 	game.map.largestLine = 0;
-	//console.log('setLevel',level);
+	//console.log('loadLevel',level);
 	for (var pLine in level.map) {
 		//console.log(level.map[pLine]);
 		var y = pLine * ym + sy;
@@ -517,12 +577,12 @@ function setLevel(level) {
 			}
 			if (char == 'g') {
 				//prop("platform goal", i * 16 + w + 2, y - 8, 2, 8);
-				prop("goal", sx+xm*i,y, 5,6.65);
+				prop("goal", sx+xm*i,y, 5,7);
 			}
 			if (char == 'u') {
 				game.map.player.x = sx+xm*i;
 				game.map.player.y = y;
-				console.log(game.map.player.x,game.map.player.y);
+				game.try = 1;
 			}
 		}
 
@@ -537,6 +597,7 @@ function setLevel(level) {
 	cam.target = player;
 	cam.reset();
 	touch.active = true;
+	game.atGoal = false;
 }
 
 function gameloop(time) {
@@ -557,17 +618,17 @@ function gameloop(time) {
 cam.zoom();
 
 function startGame(levels) {
+	initStage();
 	game = {};
 	game.map = {};
 	game.map.player = {};
 	game.score = 0;
-	game.try = 1;
 	game.goal = 0;
 	game.level = 1;
 	game.levels = levels;
 	//console.log('startGame - got levels',levels);
 	const firstLevel = levels.level[0];
-	setLevel(firstLevel);
+	loadLevel(firstLevel);
 	window.requestAnimationFrame(gameloop);
 }
 

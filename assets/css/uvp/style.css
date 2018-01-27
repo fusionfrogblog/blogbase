@@ -92,6 +92,29 @@ body {
 	background: url("/assets/images/uvp/lava.jpg");
 }
 
+.speech-bubble {
+	position: absolute;
+	background: #FEFEFE;
+	border-radius: .4em;
+	color: #000000;
+	padding: 20px;
+}
+
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 60%;
+	width: 0;
+	height: 0;
+	border: 34px solid transparent;
+	border-right-color: #FEFEFE;
+	border-left: 0;
+	border-bottom: 0;
+	margin-top: -27px;
+	margin-left: -34px;
+}
+
 .friend, .player {
 	position: absolute;
 	width: 3pc;
