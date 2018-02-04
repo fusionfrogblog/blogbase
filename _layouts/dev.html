@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<audio id="jump" src="/assets/audio/jump.mp3" type="audio/mpeg"></audio>
+<audio id="land" src="/assets/audio/land.mp3" type="audio/mpeg"></audio>
+<audio id="die" src="/assets/audio/poop.m4a" type="audio/mpeg"></audio>
+<audio id="yummy" src="/assets/audio/yummy.m4a" type="audio/mpeg"></audio>
+<audio id="bling" src="/assets/audio/bling.m4a" type="audio/mpeg"></audio>
+<audio id="win" src="/assets/audio/congratulations.m4a" type="audio/mpeg"></audio>
+<audio id="bigwin" src="/assets/audio/bigwin.mp3" type="audio/mpeg"></audio>
+<audio id="music2" src="/assets/audio/musicNiki.mp3" type="audio/mpeg"></audio>
+<audio id="letsHop" src="/assets/audio/letsHop.m4a" type="audio/mpeg"></audio>
+<button id="soundTest">Play me</button>
+<script>
+var yum = document.getElementById('yummy');
+var soundButton = document.getElementById('soundTest');
+soundButton.onclick = function() {
+  yum.play();
+};
+
+//yum.play();
+</script>
+</body>
+</html>

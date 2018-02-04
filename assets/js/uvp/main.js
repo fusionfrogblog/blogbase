@@ -646,3 +646,14 @@ $.getJSON("/assets/js/uvp/levels/levels.json")
   //   console.log( "Level JSON incorrect: " + err);
 	// 	console.log(`%c${before1}%c${offender1}%c${after1}`,`color:green`, `color:red`,`color:green`);
 	});
+
+	(function() {
+  if(!(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream)){ return false; }
+  if(window.navigator.standalone == true){ return false; }
+  if(document.cookie.search("alreadAsked") >= 0){ return false; }
+  // show prompt
+
+});
+// function hidePromptInFuture(){
+//   document.cookie = "alreadAsked=true; expires=Thu, 01 Dec 2020 12:00:00 UTC";
+// }
