@@ -18,9 +18,6 @@ const keyboard = {
 		up: 42,
 		arrowdown: 43,
 		down: 43,
-		a: 97,
-		b: 98,
-		c: 99,
 		d: 100,
 		e: 101,
 		f: 102,
@@ -160,7 +157,7 @@ function prop(type, x, y, w, h, text) {
 		y: y,
 		w: w,
 		h: h,
-		solid: type == "grave" ? false : true,
+		solid: type == "uniRainbow" ? false : true,
 		delete: function () {
 			dom.remove();
 		},
@@ -211,10 +208,12 @@ function prop(type, x, y, w, h, text) {
 		}
 	};
 	stage.props.push(self);
-	if (stage.props.length > stage.maxprops) {
+	//if (stage.props.length > stage.maxprops) {
+	if (game.rainbowCount > 30) {
 		stage.props.find(function (prop, i) {
-			if (prop.type == "grave") {
+			if (prop.type == "uniRainbow") {
 				prop.delete();
+				game.rainbowCount --;
 				stage.props.splice(i, 1);
 				return true;
 			} else return false;
@@ -253,16 +252,6 @@ function actor(type, x, y, w, h, face) {
 			this.y += dy;
 			dom.css("left", this.x + "pc");
 			dom.css("top", this.y + "pc");
-			// animates transforms css player
-			// dom.css(
-			// 	"transform",
-			// 	sp(
-			// 		"scale(%f, %f) rotate(%fdeg)",
-			// 		1 + Math.abs(this.vx / 3),
-			// 		1 + Math.abs(this.vy / 3),
-			// 		90 + this.vx * 15
-			// 	)
-			// );
 		},
 		update: function () {
 			if (this.y > 256) this.die();
@@ -272,6 +261,7 @@ function actor(type, x, y, w, h, face) {
 					player.vy = -0.72;
 					audio.jump.play();
 					this.canjump = false;
+
 				}
 			}
 			this.move(this.vx, this.vy);
@@ -293,8 +283,7 @@ function actor(type, x, y, w, h, face) {
 			//this.vx = this.vy = 0;
 			this.vx = 1;
 			this.vy = 0;
-			//this.x = 2;
-			//this.y = 6;
+
 			this.move(0, 0);
 			stage.timer = 0;
 			audio.die.play();
@@ -332,7 +321,7 @@ function actor(type, x, y, w, h, face) {
 				 self.move(0, 0);
 				 touch.active = true;
 				 game.try++;
-				 resetPlayer(game.map.player.x,game.map.player.y);
+				 resetPlayer();
 			 } else {
 				 window.setTimeout(self.animDieLoop, 40, self);
 			 }
@@ -348,7 +337,7 @@ function actor(type, x, y, w, h, face) {
 				$('.iceCream').fadeIn( 2000, function() {
 					game.score += 1200;
 					prop("speech-bubble", self.x+9,self.y-5, 10,4);
-					$('.speech-bubble').html("Congratulations!<br/>Here is your Ice cream.<br/>Click to continue.");
+					$('.speech-bubble').html("Congratulations!<br/>Enjoy your Ice cream.");
 					self = this;
 					game.jumpPressed = false;
 					clickId = setInterval(function() {
@@ -363,26 +352,6 @@ function actor(type, x, y, w, h, face) {
 			}
 			game.atGoal = true;
 
-			//iceWin.fadeIn(this,20,25);
-
-			//console.log('scoring.');
-				// pl.vx = pl.vy = 0;
-				// pl.x = 0;
-				// pl.y = 6;
-				// pl.move(0, 0);
-				// stage.timer = 0;
-				// game.goal++;
-				// game.score += game.goal * game.score;
-				// game.try = 1;
-
-			// this.vx = this.vy = 0;
-			//this.x -= 1;
-			// this.y = 6;
-			// this.move(0, 0);
-			// stage.timer = 0;
-			// game.goal++;
-			// game.score += game.goal * game.score;
-			// audio.win.play();
 		}
 	};
 	stage.actors.push(self);
@@ -407,6 +376,13 @@ function collision(actor) {
 			if (prop.type == "diamond" || prop.type == "cupcake1") {
 				//prop.delete();
 				//stage.props.splice(index, 1);
+				if (prop.type == "diamond") {
+					audio.bling.play();
+				}
+				if (prop.type == "cupcake1") {
+					audio.yummy.play();
+				}
+
 				stage.props[index].y = -1;
 				stage.props[index].x = -1;
 				prop.fadeOut(index,10,5);
@@ -480,6 +456,10 @@ const cam = {
 	follow: function () {
 		this.x = lerp(this.x+3, this.fx(), this.speed);
 		this.y = lerp(this.y, this.fy(), this.speed);
+		if (game.doRainbow) {
+			prop("uniRainbow", stage.actors[0].x-2,stage.actors[0].y+1, 2,2);
+			game.rainbowCount ++;
+		}
 	},
 	reset: function () {
 		this.x = this.fx();
@@ -492,22 +472,7 @@ const cam = {
 		return this.target.y + this.target.h / 2 - ((window.innerHeight / cam.zoomlvl) / 32);
 	}
 };
-// setup level
 
-// var y = 16;
-// for (var i = 0; i < 16; i++) {
-// 	y = Math.round(y + (Math.random() - 0.5) * 3);
-// 	var w = Math.round(8 + Math.random() * 2) * 2;
-// 	prop("grassBlock", i * 16, y, w, 2);
-// 	if (i == 15) prop("grassBlock goal", i * 16 + w + 2, y - 8, 2, 8);
-// 	if (Math.random() < 0.5 && i > 1) prop("poop", i * 16 + 4, y - 2, Math.round(w / 6) * 2);
-// }
-//prop("poop", 2, 44, 302, 3);
-// prop("grassBlock", 0, 0, 2, 48);
-// prop("platform", -2, 46, 302, 2);
-// var player = actor("player", 2, 8, 3, 3);
-// cam.target = player;
-// cam.reset();
 function loadNextLevel() {
 	// unload previous level
 	stage.props.find(function (prop, i) {
@@ -580,15 +545,19 @@ function loadLevel(level) {
 				prop("goal", sx+xm*i,y, 5,7);
 			}
 			if (char == 'u') {
-				//game.map.player.x = sx+xm*i;
-				//game.map.player.y = y;
-				resetPlayer(sx+xm+i,y);
+				game.map.player.x = sx+xm*i;
+				game.map.player.y = y;
+				audio.letsHop.play();
+				resetPlayer();
 				game.try = 1;
 			}
 		}
+		if (level.id == '2') {
+			game.doRainbow = true;
+		}
+
+
 	}
-
-
 
 	//prop("platform", sx+4,sy+4, ym+2,xm);
 
@@ -598,18 +567,34 @@ function loadLevel(level) {
 	player = actor("player", game.map.player.x, game.map.player.y, 3, 3);
 	cam.target = player;
 	cam.reset();
-	touch.active = true;
+	touch.active = false;
 	game.atGoal = false;
 }
 
-function resetPlayer(x,y) {
-	game.map.player.x = x;
-	game.map.player.y = y;
-	audio.music2.addEventListener('canplaythrough', function() {
-		audio.music2.currentTime = 0;
-	})
-	audio.music2.play();
-	return;
+function resetPlayer() {
+	touch.active = false;
+	x = game.map.player.x;
+	y = game.map.player.y;
+
+	// audio.music2.addEventListener('canplaythrough', function() {
+	// 	audio.music2.currentTime = 0;
+	// })
+	window.startBubble = prop("speech-bubble", x+6,y-1, 10,4);
+	$('.speech-bubble').html("Let's hop!<br>Press space or click.");
+
+	self = this;
+	game.jumpPressed = false;
+	clickId = setInterval(function() {
+		if (game.jumpPressed) {
+			game.jumpPressed = false;
+			clearInterval(clickId);
+			startBubble.delete();
+			touch.active = true;
+			audio.music2.play();
+			return;
+		}
+	}, 100);
+
 }
 
 function gameloop(time) {
@@ -638,6 +623,7 @@ function startGame(levels) {
 	game.goal = 0;
 	game.level = 1;
 	game.levels = levels;
+	game.rainbowCount = 0;
 	//console.log('startGame - got levels',levels);
 	const firstLevel = levels.level[0];
 	loadLevel(firstLevel);
