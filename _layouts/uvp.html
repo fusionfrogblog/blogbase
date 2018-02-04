@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Unicorn vs Poop</title>
-<meta name="viewport" content="user-scalable=no, width=320, minimum-scale = 1.0,initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="viewport" content="user-scalable=no, width=device-width, minimum-scale = 1.0,initial-scale=1.0, maximum-scale=1.0"/>
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta charset="UTF-8" />
@@ -15,12 +15,14 @@ e.preventDefault();};
 
 <body>
 <p class="scoreBoard" id="i"></p>
+
 <div id="game">
   <audio id="jump" src="/assets/audio/jump.mp3" type="audio/mp3" preload="auto"></audio>
   <audio id="land" src="/assets/audio/land.mp3" type="audio/mp3" preload="auto"></audio>
   <audio id="die" src="/assets/audio/die.mp3" type="audio/mp3" preload="auto"></audio>
   <audio id="win" src="/assets/audio/win.mp3" type="audio/mp3" preload="auto"></audio>
   <audio id="bigwin" src="/assets/audio/bigwin.mp3" type="audio/mp3" preload="auto"></audio>
+	<audio id="music2" src="/assets/audio/music1.mp3" type="audio/mp3" preload="auto"></audio>
 </div>
 <script src='/assets/js/vendor/polyfill.min.js'></script>
 <script src='/assets/js/vendor/jquery/jquery-3.2.1.min.js'></script>

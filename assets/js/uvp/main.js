@@ -171,7 +171,6 @@ function prop(type, x, y, w, h, text) {
   		});
 			this.upScore = function(pl,cd,score) {
 				game.score += score;
-				console.log('scoring.');
 				cd--;
 				if (cd > 0) {
 				self= this;
@@ -189,7 +188,6 @@ function prop(type, x, y, w, h, text) {
 				//touch.active = true;
 				cd = 1;
 				this.waitForMessage = function() {
-					console.log('wait...',cd);
 					window.setTimeout(function() { self.waitForMessage(cd)},1000);
 				}
 			}
@@ -290,6 +288,7 @@ function actor(type, x, y, w, h, face) {
 		},
 		die: function () {
 			//prop("grave", this.x - this.vx, this.y - this.vy, 4, 3, ":(");
+			audio.music2.pause();
 			touch.active = false;
 			//this.vx = this.vy = 0;
 			this.vx = 1;
@@ -333,6 +332,7 @@ function actor(type, x, y, w, h, face) {
 				 self.move(0, 0);
 				 touch.active = true;
 				 game.try++;
+				 resetPlayer(game.map.player.x,game.map.player.y);
 			 } else {
 				 window.setTimeout(self.animDieLoop, 40, self);
 			 }
@@ -580,14 +580,16 @@ function loadLevel(level) {
 				prop("goal", sx+xm*i,y, 5,7);
 			}
 			if (char == 'u') {
-				game.map.player.x = sx+xm*i;
-				game.map.player.y = y;
+				//game.map.player.x = sx+xm*i;
+				//game.map.player.y = y;
+				resetPlayer(sx+xm+i,y);
 				game.try = 1;
 			}
 		}
-
-
 	}
+
+
+
 	//prop("platform", sx+4,sy+4, ym+2,xm);
 
 	// game frame and player init
@@ -598,6 +600,16 @@ function loadLevel(level) {
 	cam.reset();
 	touch.active = true;
 	game.atGoal = false;
+}
+
+function resetPlayer(x,y) {
+	game.map.player.x = x;
+	game.map.player.y = y;
+	audio.music2.addEventListener('canplaythrough', function() {
+		audio.music2.currentTime = 0;
+	})
+	audio.music2.play();
+	return;
 }
 
 function gameloop(time) {
@@ -636,4 +648,15 @@ function startGame(levels) {
 $.getJSON("/assets/js/uvp/levels/levels.json")
 	.done(function (allLevels ) {
 		startGame(allLevels);
+	// keep comment breaks on mobile
+	// })
+	// .fail(function( xhr, textStatus, error ) {
+  //   var err = textStatus + ", " + error;
+	// 	var errArray = error.toString().split(' ');
+	// 	var pos = errArray[errArray.length-1];
+	// 	var before1 = xhr.responseText.substring(pos-20,pos-2);
+	// 	var offender1 = xhr.responseText.substring(pos-2,pos-1);
+	// 	var after1 = xhr.responseText.substring(pos-1,pos+2);
+  //   console.log( "Level JSON incorrect: " + err);
+	// 	console.log(`%c${before1}%c${offender1}%c${after1}`,`color:green`, `color:red`,`color:green`);
 	});
