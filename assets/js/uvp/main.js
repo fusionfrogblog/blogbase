@@ -260,7 +260,12 @@ function actor(type, x, y, w, h, face) {
 				if (this.type == "player" && touch.active && this.canjump ) {
 					player.vy = -0.72;
 					audio.jump.play();
+					if (game.jumpLeft > 0) {
+						game.jumpLeft--;
+					} else {
 					this.canjump = false;
+					game.jumpLeft = game.jumpMulti;
+				}
 
 				}
 			}
@@ -554,6 +559,7 @@ function loadLevel(level) {
 		}
 		if (level.id == '2') {
 			game.doRainbow = true;
+			game.jumpMulti = 2;
 		}
 
 
@@ -624,6 +630,8 @@ function startGame(levels) {
 	game.level = 1;
 	game.levels = levels;
 	game.rainbowCount = 0;
+	game.jumpMulti = 0;
+	game.jumpLeft = 1;
 	//console.log('startGame - got levels',levels);
 	const firstLevel = levels.level[0];
 	loadLevel(firstLevel);
@@ -647,13 +655,15 @@ $.getJSON("/assets/js/uvp/levels/levels.json")
 	// 	console.log(`%c${before1}%c${offender1}%c${after1}`,`color:green`, `color:red`,`color:green`);
 	});
 
-	(function() {
-  if(!(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream)){ return false; }
-  if(window.navigator.standalone == true){ return false; }
-  if(document.cookie.search("alreadAsked") >= 0){ return false; }
+  if((/iPad|iPhone|iPod/.test(navigator.userAgent))){
+		if(window.navigator.standalone == false){
+		alert('Add this web app to your home screen.  Tab the box with up arrow below, then the Add to Home Screen button below.');
+		}
+	}
+  //if(window.navigator.standalone == true){ return false; }
+  //if(document.cookie.search("alreadAsked") >= 0){ return false; }
   // show prompt
 
-});
 // function hidePromptInFuture(){
 //   document.cookie = "alreadAsked=true; expires=Thu, 01 Dec 2020 12:00:00 UTC";
 // }

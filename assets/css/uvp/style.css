@@ -23,6 +23,7 @@
     -o-transform: rotate(-90deg);
     -ms-transform: rotate(-90deg);
     transform: rotate(-90deg);
+		transform: translate(1px,50px);
   }
 }
 
@@ -156,6 +157,7 @@ body {
 	width: 3pc;
 	height: 3pc;
 	transform: scale(1, 1) rotate(90deg);
+	opacity: 0.2;
 	background-image: -webkit-linear-gradient(left, red, orange, yellow, green, blue, violet);
 }
 
