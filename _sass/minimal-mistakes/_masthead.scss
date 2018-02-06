@@ -30,6 +30,7 @@
     background-image: url('/assets/images/fusionfrog_logo2009v1.png');
     background-repeat: no-repeat;
     background-position: 1em 0;
+    min-height: 80px;
 
     @include breakpoint($x-large) {
       max-width: $x-large;
