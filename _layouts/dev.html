@@ -1,26 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <style>
+  /* Style the video: 100% width and height to cover the entire window */
+#myVideo {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+/* Add some content at the bottom of the video/page */
+.content {
+    position: fixed;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: #f1f1f1;
+    width: 100%;
+    padding: 20px;
+}
+
+/* Style the button used to pause/play the video */
+#myBtn {
+    width: 200px;
+    font-size: 18px;
+    padding: 10px;
+    border: none;
+    background: #000;
+    color: #fff;
+    cursor: pointer;
+}
+
+#myBtn:hover {
+    background: #ddd;
+    color: black;
+}
+</style>
 </head>
 <body>
-<audio id="jump" src="/assets/audio/jump.mp3" type="audio/mpeg"></audio>
-<audio id="land" src="/assets/audio/land.mp3" type="audio/mpeg"></audio>
-<audio id="die" src="/assets/audio/poop.m4a" type="audio/mpeg"></audio>
-<audio id="yummy" src="/assets/audio/yummy.m4a" type="audio/mpeg"></audio>
-<audio id="bling" src="/assets/audio/bling.m4a" type="audio/mpeg"></audio>
-<audio id="win" src="/assets/audio/congratulations.m4a" type="audio/mpeg"></audio>
-<audio id="bigwin" src="/assets/audio/bigwin.mp3" type="audio/mpeg"></audio>
-<audio id="music2" src="/assets/audio/musicNiki.mp3" type="audio/mpeg"></audio>
-<audio id="letsHop" src="/assets/audio/letsHop.m4a" type="audio/mpeg"></audio>
-<button id="soundTest">Play me</button>
-<script>
-var yum = document.getElementById('yummy');
-var soundButton = document.getElementById('soundTest');
-soundButton.onclick = function() {
-  yum.play();
-};
+  <!-- The video -->
+  <video autoplay muted loop id="myVideo">
+    <source src="/assets/video/delta.mp4" type="video/mp4">
+  </video>
 
-//yum.play();
+  <!-- Optional: some overlay text to describe the video -->
+  <div class="content">
+    <h1>Heading</h1>
+    <p>Lorem ipsum...</p>
+    <!-- Use a button to pause/play the video with JavaScript -->
+    <button id="myBtn" onclick="myFunction()">Pause</button>
+  </div>
+  <script>
+// Get the video
+var video = document.getElementById("myVideo");
+
+// Get the button
+var btn = document.getElementById("myBtn");
+
+// Pause and play the video, and change the button text
+function myFunction() {
+    if (video.paused) {
+        video.play();
+        btn.innerHTML = "Pause";
+    } else {
+        video.pause();
+        btn.innerHTML = "Play";
+    }
+}
 </script>
 </body>
 </html>
